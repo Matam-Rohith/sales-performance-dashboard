@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Performance Dashboard | Matam Rohith</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f1117;
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+        header {
+            background: linear-gradient(135deg, #1a1f2e 0%, #16213e 100%);
+            padding: 30px 40px;
+            border-bottom: 1px solid #2d3748;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 { font-size: 1.8rem; color: #63b3ed; }
+        header p { color: #a0aec0; margin-top: 4px; }
+        .badge {
+            background: #f6c90e;
+            color: #1a202c;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .tools-bar {
+            background: #1a1f2e;
+            padding: 12px 40px;
+            display: flex;
+            gap: 12px;
+            border-bottom: 1px solid #2d3748;
+        }
+        .tool-tag {
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+        .excel { background: #1e6b3c; color: #9ae6b4; }
+        .powerbi { background: #7b5e00; color: #f6c90e; }
+        .tableau { background: #7c2d2d; color: #feb2b2; }
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            padding: 24px 40px;
+        }
+        .kpi-card {
+            background: #1a1f2e;
+            border: 1px solid #2d3748;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+        .kpi-card:hover { transform: translateY(-3px); border-color: #63b3ed; }
+        .kpi-icon { font-size: 2rem; margin-bottom: 8px; }
+        .kpi-value { font-size: 1.6rem; font-weight: 700; color: #63b3ed; }
+        .kpi-label { font-size: 0.8rem; color: #718096; margin-top: 4px; }
+        .kpi-delta { font-size: 0.78rem; color: #68d391; margin-top: 4px; }
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 16px;
+            padding: 0 40px 24px;
+        }
+        .chart-card {
+            background: #1a1f2e;
+            border: 1px solid #2d3748;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .chart-card h3 { color: #90cdf4; margin-bottom: 16px; font-size: 0.95rem; }
+        .charts-grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+            padding: 0 40px 24px;
+        }
+        canvas { max-height: 260px; }
+        footer {
+            text-align: center;
+            padding: 24px;
+            color: #4a5568;
+            border-top: 1px solid #2d3748;
+            font-size: 0.85rem;
+        }
+        footer a { color: #63b3ed; text-decoration: none; }
+        @media (max-width: 900px) {
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+            .charts-grid, .charts-grid-3 { grid-template-columns: 1fr; }
+            header { flex-direction: column; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div>
+        <h1>📊 Sales Performance Dashboard</h1>
+        <p>Superstore & Kaggle Sales Data Analysis | 2020–2023</p>
+    </div>
+    <div style="text-align:right">
+        <span class="badge">⭐ Best Overall</span>
+        <p style="color:#718096;font-size:0.8rem;margin-top:6px">by Matam Rohith</p>
+    </div>
+</header>
+
+<div class="tools-bar">
+    <span class="tool-tag excel">📗 Excel</span>
+    <span class="tool-tag powerbi">💛 Power BI</span>
+    <span class="tool-tag tableau">🔴 Tableau</span>
+    <span style="margin-left:auto;color:#718096;font-size:0.82rem">Last updated: July 2026</span>
+</div>
+
+<div class="kpi-grid">
+    <div class="kpi-card">
+        <div class="kpi-icon">💰</div>
+        <div class="kpi-value">$2.3M</div>
+        <div class="kpi-label">Total Sales</div>
+        <div class="kpi-delta">▲ 11.4% YoY</div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-icon">📈</div>
+        <div class="kpi-value">$286K</div>
+        <div class="kpi-label">Total Profit</div>
+        <div class="kpi-delta">▲ 14.2% YoY</div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-icon">📦</div>
+        <div class="kpi-value">9,994</div>
+        <div class="kpi-label">Total Orders</div>
+        <div class="kpi-delta">▲ 8.3% YoY</div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-icon">💹</div>
+        <div class="kpi-value">12.47%</div>
+        <div class="kpi-label">Profit Margin</div>
+        <div class="kpi-delta">▲ 0.3 pts</div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-icon">🛒</div>
+        <div class="kpi-value">$230</div>
+        <div class="kpi-label">Avg Order Value</div>
+        <div class="kpi-delta">▲ 2.8% YoY</div>
+    </div>
+</div>
+
+<div class="charts-grid">
+    <div class="chart-card">
+        <h3>📅 Monthly Sales Trend</h3>
+        <canvas id="monthlySales"></canvas>
+    </div>
+    <div class="chart-card">
+        <h3>🗂️ Sales by Category</h3>
+        <canvas id="categoryChart"></canvas>
+    </div>
+</div>
+
+<div class="charts-grid-3">
+    <div class="chart-card">
+        <h3>🗺️ Region-wise Sales</h3>
+        <canvas id="regionChart"></canvas>
+    </div>
+    <div class="chart-card">
+        <h3>🏆 Top 10 Products</h3>
+        <canvas id="topProducts"></canvas>
+    </div>
+    <div class="chart-card">
+        <h3>📊 Profit by Segment</h3>
+        <canvas id="segmentChart"></canvas>
+    </div>
+</div>
+
+<script>
+const chartDefaults = {
+    plugins: { legend: { labels: { color: '#a0aec0', font: { size: 11 } } } },
+    scales: {
+        x: { ticks: { color: '#718096', font: { size: 10 } }, grid: { color: '#2d3748' } },
+        y: { ticks: { color: '#718096', font: { size: 10 } }, grid: { color: '#2d3748' } }
+    }
+};
+
+// Monthly Sales
+new Chart(document.getElementById('monthlySales'), {
+    type: 'line',
+    data: {
+        labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+        datasets: [
+            { label: 'Sales 2023', data: [94285,59751,205516,53485,155866,94567,122278,159296,307667,210528,352461,325294], borderColor: '#63b3ed', backgroundColor: 'rgba(99,179,237,0.08)', tension: 0.4, fill: true },
+            { label: 'Sales 2022', data: [85432,52341,187654,48765,142543,86432,112345,148765,281234,195432,321543,298765], borderColor: '#68d391', backgroundColor: 'rgba(104,211,145,0.08)', tension: 0.4, fill: true }
+        ]
+    },
+    options: { ...chartDefaults, responsive: true }
+});
+
+// Category
+new Chart(document.getElementById('categoryChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ['Technology', 'Furniture', 'Office Supplies'],
+        datasets: [{ data: [836154, 741999, 719047], backgroundColor: ['#63b3ed','#f6ad55','#68d391'], borderWidth: 0 }]
+    },
+    options: { responsive: true, plugins: { legend: { labels: { color: '#a0aec0' }, position: 'bottom' } } }
+});
+
+// Region
+new Chart(document.getElementById('regionChart'), {
+    type: 'bar',
+    data: {
+        labels: ['West', 'East', 'Central', 'South'],
+        datasets: [
+            { label: 'Sales ($)', data: [725458, 678781, 501240, 391722], backgroundColor: ['#63b3ed','#68d391','#f6ad55','#fc8181'] },
+            { label: 'Profit ($)', data: [108418, 91523, 39706, 46749], backgroundColor: ['#2c5282','#276749','#7b4f12','#822727'] }
+        ]
+    },
+    options: { ...chartDefaults, responsive: true, plugins: { legend: { labels: { color: '#a0aec0' } } } }
+});
+
+// Top 10 Products
+new Chart(document.getElementById('topProducts'), {
+    type: 'bar',
+    data: {
+        labels: ['Canon imageCLASS','Cisco TelePresence','Motorola Smart Talk','Hoover Upright','Sauder Classic','Sharp Wireless','Apple iPhone','GBC DocuBind','HP Designjet','Cubify CubeX'],
+        datasets: [{ label: 'Sales ($)', data: [61600,22638,17500,14235,13999,13100,11999,10800,9899,8760], backgroundColor: '#63b3ed' }]
+    },
+    options: {
+        indexAxis: 'y',
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+            x: { ticks: { color: '#718096', font: { size: 9 } }, grid: { color: '#2d3748' } },
+            y: { ticks: { color: '#a0aec0', font: { size: 9 } }, grid: { color: '#2d3748' } }
+        }
+    }
+});
+
+// Segment
+new Chart(document.getElementById('segmentChart'), {
+    type: 'pie',
+    data: {
+        labels: ['Consumer', 'Corporate', 'Home Office'],
+        datasets: [{ data: [1161401, 706146, 429653], backgroundColor: ['#63b3ed','#f6ad55','#9f7aea'], borderWidth: 0 }]
+    },
+    options: { responsive: true, plugins: { legend: { labels: { color: '#a0aec0' }, position: 'bottom' } } }
+});
+</script>
+
+<footer>
+    Built by <a href="https://rohith-portfolio-six.vercel.app/" target="_blank">Matam Rohith</a> |
+    <a href="https://github.com/Matam-Rohith/sales-performance-dashboard" target="_blank">GitHub Repo</a> |
+    Tools: Excel + Power BI + Tableau
+</footer>
+
+</body>
+</html>
